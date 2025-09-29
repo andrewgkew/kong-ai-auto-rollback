@@ -23,12 +23,20 @@ or just simply set the env var using the `--var` option of helm
 
 ## Pre-req's
 ### Claude AI Token
+> [!NOTE]
+> Output from this section is TOKEN for env var `ANTHROPIC_API_KEY`
+
 The AI Agent has been tested `ONLY` With Claude and so an account and token with this service will be needed
 to use this project. Once an API Key is created it needs to be passed into the chart on installation as per the below
 
 Create an account and then a key at this link: https://console.anthropic.com/settings/keys
 
+You may need to fund the account as well, it only uses a few cents to run, so $10 will be more than enough.
+
 ### Github
+> [!NOTE]
+> Output from this section is TOKEN for env var `GIT_CREDENTIALS` and a new public repository for env var `GIT_REPO`
+
 Github has been the git repository service used for this project but other services will work (just not tested).
 Simply create a git PAT and give it enough permissions to read and write to your repository.
 
@@ -43,6 +51,10 @@ Set the following scopes on your `Tokens (classic)` PAT
 You then also want to create a new repository to house the Kong config in, make it public.
 
 ### Slack
+> [!NOTE]
+> Output from this section is TOKEN for env var `SLACK_MCP_XOXP_TOKEN`, a channel and team ID
+
+#### User OAuth Token
 Slack is being used as a means of alerting when something happens. In order for this to work you
 will need a slack workspace and the admin access to create Slack Apps. Follow the following steps
 to create a User token and get the slack team id:
@@ -63,6 +75,7 @@ to create a User token and get the slack team id:
 8. Up the top of the page click "Install to <name of workspace>"
 9. Copy the User OAuth Token starting with `xoxp-`
 
+#### Slack Channel Id
 You will also need a Slack channel to send alerts to, but the tool needs the channel id not name
 which can be obtained via the UI, click on the channel name to open its settings and navigate to the
 bottom of the window
@@ -71,6 +84,7 @@ bottom of the window
     <img src="assets/slack-channel-id.png">
 </p>
 
+#### Slack Team Id
 Finally, you need the Team Id, again nagivate to your Slack workspace in the browser and look at the URL, the
 parameter starting with a `T` is your team ID.
 
@@ -81,6 +95,9 @@ https://app.slack.com/client/T00000
 Once all configured you will share these details in the chart below.
 
 ### Konnect
+> [!NOTE]
+> Output from this section is TOKEN for env var `KONNECT_ACCESS_TOKEN` from Konnect System Account
+
 The last service you need an account with is Kong Konnect. You can register for a free account here: https://cloud.konghq.com/
 Once you have logged in you will need to create a TOKEN so that the agent can access the APIs.
 This is done by creating System Accounts:
