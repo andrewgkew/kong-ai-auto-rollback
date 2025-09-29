@@ -1,0 +1,7 @@
+charts/ai-auto-rollback/charts
+.idea
+.git
+*.tgz
+Chart.lock
+kong-gateway-deployment/tls.crt
+kong-gateway-deployment/tls.key

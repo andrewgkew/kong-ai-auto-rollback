@@ -1,0 +1,17 @@
+_format_version: "3.0"
+plugins:
+  - name: prometheus
+    config:
+      per_consumer: true
+services:
+  - name: echo-service
+    path: /anything
+    host: httpbin.org
+    port: 443
+    protocol: https
+    routes:
+      - name: echo-route
+        methods:
+          - GET
+        paths:
+          - /echo

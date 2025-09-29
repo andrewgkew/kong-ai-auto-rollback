@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konnect-mcp
+  labels:
+    app: konnect-mcp
+spec:
+  replicas: {{ .Values.mcp.konnect.replicas }}
+  selector:
+    matchLabels:
+      app: konnect-mcp
+  template:
+    metadata:
+      labels:
+        app: konnect-mcp
+    spec:
+      {{- if .Values.mcp.konnect.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.mcp.konnect.image.pullSecrets }}
+      - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      containers:
+      - name: konnect-mcp
+        image: {{ printf "%s:%s" $.Values.mcp.konnect.image.repository $.Values.mcp.konnect.image.tag }}
+        imagePullPolicy: {{ .Values.mcp.konnect.image.pullPolicy }}
+        env:
+        {{- range .Values.mcp.konnect.env }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+
+        {{- if or (not (empty .Values.mcp.konnect.envConfigMap)) (not (empty .Values.mcp.konnect.envSecret))}}
+        envFrom:
+        {{- if not (empty .Values.mcp.konnect.envConfigMap) }}
+        - configMapRef:
+            name: {{ .Values.mcp.konnect.envConfigMap }}
+        {{- end }}
+        {{- if not (empty .Values.mcp.konnect.envSecret) }}
+        - secretRef:
+            name: {{ .Values.mcp.konnect.envSecret }}
+        {{- end }}
+        {{- end }}
+        ports:
+          - containerPort: 8003
+        args:
+          - "--stdio"
+          - "node /opt/mcp-konnect/build/index.js"
+          - "--port"
+          - "8003"
+          - "--logLevel"
+          - "debug"
+        stdin: true
+        tty: true

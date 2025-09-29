@@ -1,0 +1,13 @@
+apiVersion: v2
+name: kong-ai-auto-rollback
+description: A Helm chart for Kong AI Auto Rollback
+maintainers:
+  - name: andrewgkew
+    email: andrew@keoghinnovation.com
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: holmes
+    version: 0.14.2
+    repository: https://robusta-charts.storage.googleapis.com

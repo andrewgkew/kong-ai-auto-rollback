@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-mcp
+  labels:
+    app: slack-mcp
+spec:
+  replicas: {{ .Values.mcp.slack.replicas }}
+  selector:
+    matchLabels:
+      app: slack-mcp
+  template:
+    metadata:
+      labels:
+        app: slack-mcp
+    spec:
+      {{- if .Values.mcp.konnect.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.mcp.konnect.image.pullSecrets }}
+      - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      containers:
+        - name: supergateway
+          image: {{ printf "%s:%s" $.Values.mcp.slack.image.repository $.Values.mcp.slack.image.tag }}
+          imagePullPolicy: {{ .Values.mcp.slack.image.pullPolicy }}
+          env:
+          {{- range .Values.mcp.slack.env }}
+          - name: {{ .name }}
+            value: {{ .value | quote }}
+          {{- end }}
+
+          {{- if or (not (empty .Values.mcp.slack.envConfigMap)) (not (empty .Values.mcp.slack.envSecret)) }}
+          envFrom:
+          {{- if not (empty .Values.mcp.slack.envConfigMap) }}
+          - configMapRef:
+              name: {{ .Values.mcp.slack.envConfigMap }}
+          {{- end }}
+          {{- if not (empty .Values.mcp.slack.envSecret) }}
+          - secretRef:
+              name: {{ .Values.mcp.slack.envSecret }}
+          {{- end }}
+          {{- end }}
+          ports:
+            - containerPort: 8003
+          args:
+            - "--stdio"
+            - "npx -y slack-mcp-server@{{ .Values.mcp.slack.version }} /"
+            - "--port"
+            - "8003"
+            - "--logLevel"
+            - "debug"
+          stdin: true
+          tty: true

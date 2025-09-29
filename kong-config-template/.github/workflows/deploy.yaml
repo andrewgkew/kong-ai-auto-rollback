@@ -1,0 +1,18 @@
+name: Kong Konnect Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-kong-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: source
+      - uses: kong/setup-deck@v1
+      - run: deck gateway ping --konnect-control-plane-name ai-auto-rollback --konnect-token=${{ secrets.KONNECT_TOKEN }} --konnect-addr=https://eu.api.konghq.com
+      - run: deck gateway sync source/*.yaml --konnect-token=${{ secrets.KONNECT_TOKEN }} --konnect-addr=https://eu.api.konghq.com --konnect-control-plane-name ai-auto-rollback

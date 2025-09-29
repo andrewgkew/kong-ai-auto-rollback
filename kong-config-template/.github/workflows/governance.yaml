@@ -1,0 +1,17 @@
+name: Check Kong configuration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: source
+      - uses: kong/setup-deck@v1
+      - run: deck file validate source/*.yaml
+      - run: deck gateway validate --konnect-control-plane-name ai-auto-rollback --konnect-compatibility source/*.yaml --konnect-token=${{ secrets.KONNECT_TOKEN }} --konnect-addr=https://eu.api.konghq.com

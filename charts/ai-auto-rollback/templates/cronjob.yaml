@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ai-agent-trigger
+spec:
+  schedule: {{ .Values.aiagent.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: aiagent-caller
+              image: {{ printf "%s:%s" $.Values.aiagent.image.repository $.Values.aiagent.image.tag }}
+              imagePullPolicy: {{ .Values.aiagent.image.pullPolicy }}
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  curl --location 'http://{{ .Release.Name }}-holmes.{{ .Release.Namespace }}.svc.cluster.local/api/chat' \
+                  --header 'Content-Type: application/json' \
+                  --data '{"ask": {{ .Values.aiagent.prompt | quote }},"model": {{ .Values.aiagent.model | quote }}}'
