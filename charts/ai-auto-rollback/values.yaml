@@ -1,13 +1,20 @@
 nameOverride:
 
 holmes:
+  image: holmes:0.14.2-hf5
+  registry: us-central1-docker.pkg.dev/genuine-flight-317411/devel
   additionalEnvVars: []
 
   modelList:
-    claude-sonnet:
-      api_key: "{{ env.ANTHROPIC_API_KEY }}"
-      model: anthropic/claude-sonnet-4-20250514
-      temperature: 0
+    bedrock-claude-sonnet-4:
+      aws_access_key_id: "{{ env.AWS_ACCESS_KEY_ID }}"
+      aws_secret_access_key: "{{ env.AWS_SECRET_ACCESS_KEY }}"
+      aws_region_name: eu-south-2
+      model: bedrock/eu.anthropic.claude-sonnet-4-20250514-v1:0
+      temperature: 1
+      thinking:
+        budget_tokens: 10000
+        type: enabled
 
   toolsets:
     helm/core:
@@ -18,15 +25,15 @@ holmes:
   mcp_servers:
     konnect-mcp:
       description: "Kong Konnect MCP"
-      url: "http://konnect-mcp:8003"
+      url: "http://konnect-mcp:8003/sse"
     slack-mcp:
       description: "Slack MCP"
-      url: "http://slack-mcp:8003"
+      url: "http://slack-mcp:8003/sse"
 
 aiagent:
   enabled: true
   schedule: "*/5 * * * *" # Every 5 minutes
-  model: "claude-sonnet-4-20250514"
+  model: "eu.anthropic.claude-sonnet-4-20250514-v1:0"
   prompt: #Override the prompt
   slack_channel_id: ""
   image:

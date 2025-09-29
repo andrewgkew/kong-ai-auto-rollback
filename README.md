@@ -22,16 +22,25 @@ For options 2 and 3 you will need to create the config map or secret yourself ei
 or just simply set the env var using the `--var` option of helm
 
 ## Pre-req's
-### Claude AI Token
+### AWS Bedrock
 > [!NOTE]
-> Output from this section is a TOKEN for env var `ANTHROPIC_API_KEY`
+> Output from this section are AWS credentials for env var `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 
-The AI Agent has been tested **ONLY** with Claude and so an account and token with this service will be needed
-to use this project. Once an API Key is created it needs to be passed into the chart on installation as per the below
+The AI Agent has been tested **ONLY** with AWS Bedrock Sonnet 4 model and so you will need to setup an AWS account to use this.
 
-Create an account and then a key at this link: https://console.anthropic.com/settings/keys
+1. Register for AWS account
+2. Set up a IAM user and generate CLI credentials - this gives you the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+3. Assign a managed policy to the user called `AmazonBedrockFullAccess`
 
-You may need to fund the account as well, it only uses a few cents to run, so $10 will be more than enough.
+#### Quota increase
+The default tokens for minute limit is too low to use this agent and so you will need to request and increase.
+Navigate to the AWS Quotas for Bedrock: https://eu-west-1.console.aws.amazon.com/servicequotas/home/services/bedrock/quotas
+
+And Request an increase from 200k to 1M for `tokens per minute for Anthropic Claude Sonnet 4 V1`
+
+<p align="center" width="100%">
+    <img src="assets/aws-quotas-bedrock.png">
+</p>
 
 ### Github
 > [!NOTE]
@@ -242,6 +251,8 @@ kubectl create secret generic mcp-slack-secret \
   --from-literal=SLACK_MCP_XOXP_TOKEN='<xoxp-token>' \
   --from-literal=SLACK_MCP_ADD_MESSAGE_TOOL='<add-message-tool>' \
   -n ai
+  
+
 ```
 
 Then install the chart, make sure to replace the below inputs with the valid credentials
@@ -255,10 +266,12 @@ helm install ai-agent ai-auto-rollback \
     --set "holmes.additionalEnvVars[0].value=<owner/reponame>" \
     --set "holmes.additionalEnvVars[1].name=GIT_BRANCH" \
     --set "holmes.additionalEnvVars[1].value=main" \
-    --set "holmes.additionalEnvVars[2].name=ANTHROPIC_API_KEY" \
-    --set "holmes.additionalEnvVars[2].value=<claude-api-key>" \
-    --set "holmes.additionalEnvVars[3].name=GIT_CREDENTIALS" \
-    --set "holmes.additionalEnvVars[3].value=<github-pat>" \
+    --set "holmes.additionalEnvVars[2].name=AWS_ACCESS_KEY_ID" \
+    --set "holmes.additionalEnvVars[2].value=<access-key>" \
+    --set "holmes.additionalEnvVars[3].name=AWS_SECRET_ACCESS_KEY" \
+    --set "holmes.additionalEnvVars[3].value=<secret-key>" \
+    --set "holmes.additionalEnvVars[4].name=GIT_CREDENTIALS" \
+    --set "holmes.additionalEnvVars[4].value=<github-pat>" \
     -n ai
 ```
 
@@ -288,10 +301,12 @@ helm upgrade -i ai-agent ai-auto-rollback \
     --set "holmes.additionalEnvVars[0].value=owner/repo" \
     --set "holmes.additionalEnvVars[1].name=GIT_BRANCH" \
     --set "holmes.additionalEnvVars[1].value=main" \
-    --set "holmes.additionalEnvVars[2].name=ANTHROPIC_API_KEY" \
-    --set "holmes.additionalEnvVars[2].value=sk-ant-xxxxx" \
-    --set "holmes.additionalEnvVars[3].name=GIT_CREDENTIALS" \
-    --set "holmes.additionalEnvVars[3].value=ghp_xxxx" \
+    --set "holmes.additionalEnvVars[2].name=AWS_ACCESS_KEY_ID" \
+    --set "holmes.additionalEnvVars[2].value=<access-key>" \
+    --set "holmes.additionalEnvVars[3].name=AWS_SECRET_ACCESS_KEY" \
+    --set "holmes.additionalEnvVars[3].value=<secret-key>" \
+    --set "holmes.additionalEnvVars[4].name=GIT_CREDENTIALS" \
+    --set "holmes.additionalEnvVars[4].value=ghp_xxxx" \
     -n ai
 ```
 
@@ -352,10 +367,3 @@ You will eventually get the following message in slack
 Click in the PR, check the change, merge it and your traffic will start to work again. 
 
 BOSH! Your configuration has been rolled back by the Kong Agentic AI Agent
-
-## Current Limitations
-One limitation I have noticed while testing was the Claude token limits. What I found was I kept getting
-rate limited when my AI Agent made calls to the LLM. This seemed to fix itself I think when some of the calls
-could be cached as the data was not changing.
-
-A possible solution is to get the limits increased or use another LLM like AWS Bedrock,
