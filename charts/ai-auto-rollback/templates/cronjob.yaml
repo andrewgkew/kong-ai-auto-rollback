@@ -18,4 +18,4 @@ spec:
                 - |
                   curl --location 'http://{{ .Release.Name }}-holmes.{{ .Release.Namespace }}.svc.cluster.local/api/chat' \
                   --header 'Content-Type: application/json' \
-                  --data '{"ask": {{ .Values.aiagent.prompt | quote }},"model": {{ .Values.aiagent.model | quote }}}'
+                  --data '{"ask": {{- include "ai_prompt" . | quote }},"model": {{ .Values.aiagent.model | quote }}}'

@@ -24,9 +24,9 @@ or just simply set the env var using the `--var` option of helm
 ## Pre-req's
 ### Claude AI Token
 > [!NOTE]
-> Output from this section is TOKEN for env var `ANTHROPIC_API_KEY`
+> Output from this section is a TOKEN for env var `ANTHROPIC_API_KEY`
 
-The AI Agent has been tested `ONLY` With Claude and so an account and token with this service will be needed
+The AI Agent has been tested **ONLY** with Claude and so an account and token with this service will be needed
 to use this project. Once an API Key is created it needs to be passed into the chart on installation as per the below
 
 Create an account and then a key at this link: https://console.anthropic.com/settings/keys
@@ -35,7 +35,7 @@ You may need to fund the account as well, it only uses a few cents to run, so $1
 
 ### Github
 > [!NOTE]
-> Output from this section is TOKEN for env var `GIT_CREDENTIALS` and a new public repository for env var `GIT_REPO`
+> Output from this section is a TOKEN for env var `GIT_CREDENTIALS` and a new public repository for env var `GIT_REPO`
 
 Github has been the git repository service used for this project but other services will work (just not tested).
 Simply create a git PAT and give it enough permissions to read and write to your repository.
@@ -52,7 +52,10 @@ You then also want to create a new repository to house the Kong config in, make 
 
 ### Slack
 > [!NOTE]
-> Output from this section is TOKEN for env var `SLACK_MCP_XOXP_TOKEN`, a channel and team ID
+> Outputs from this section are:
+> 1. A TOKEN for env var `SLACK_MCP_XOXP_TOKEN`
+> 2. A Channel ID for env var `SLACK_CHANNEL_IDS`
+> 3. A Team ID for env var `SLACK_TEAM_ID`
 
 #### User OAuth Token
 Slack is being used as a means of alerting when something happens. In order for this to work you
@@ -96,7 +99,7 @@ Once all configured you will share these details in the chart below.
 
 ### Konnect
 > [!NOTE]
-> Output from this section is TOKEN for env var `KONNECT_ACCESS_TOKEN` from Konnect System Account
+> Output from this section is a TOKEN for env var `KONNECT_ACCESS_TOKEN` from Konnect System Account
 
 The last service you need an account with is Kong Konnect. You can register for a free account here: https://cloud.konghq.com/
 Once you have logged in you will need to create a TOKEN so that the agent can access the APIs.
@@ -247,6 +250,7 @@ cd charts
 helm install ai-agent ai-auto-rollback \
     --set "mcp.konnect.envSecret=mcp-konnect-secret" \
     --set "mcp.slack.envSecret=mcp-slack-secret" \
+    --set "aiagent.slack_channel_id=<channel-id>" \
     --set "holmes.additionalEnvVars[0].name=GIT_REPO" \
     --set "holmes.additionalEnvVars[0].value=<owner/reponame>" \
     --set "holmes.additionalEnvVars[1].name=GIT_BRANCH" \
@@ -279,6 +283,7 @@ cd charts
 helm upgrade -i ai-agent ai-auto-rollback \
     --set "mcp.konnect.envSecret=mcp-konnect-secret" \
     --set "mcp.slack.envSecret=mcp-slack-secret" \
+    --set "aiagent.slack_channel_id=<channel-id>" \
     --set "holmes.additionalEnvVars[0].name=GIT_REPO" \
     --set "holmes.additionalEnvVars[0].value=owner/repo" \
     --set "holmes.additionalEnvVars[1].name=GIT_BRANCH" \
