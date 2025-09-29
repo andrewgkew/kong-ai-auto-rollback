@@ -3,12 +3,12 @@
 </p>
 
 # Kong Auto Rollback AI Agent
-This project is Kong auto rollback AI Agent. Its purpose is to hinge off of an AI Agent
+This project is a Kong auto rollback AI Agent. Its purpose is to hinge off of an AI Agent
 to improve the MTTR and Roll back speed for Kong configurations.
 The AI Agent runs on a schedule monitoring the Advanced Analytics of the Kong Gateway and if constant errors
 are seen it will try work out a recent change that has been committed to Kong Config repository and revert
-the change. A PR will be created, using GitHub actions to both validate the config change when PR is created
-as well as another workflow that auto merges the PRs. A final workflow will sync the configuration 
+the change. A PR will be created, using GitHub actions to validate the config change when PR is created. A manual
+merge of the PR will trigger a workflow to sync the configuration changes to the gateway.
 
 ## Tokens / Keys
 This chart needs a few tokens and keys for all the services to work.
@@ -85,7 +85,7 @@ The last service you need an account with is Kong Konnect. You can register for 
 Once you have logged in you will need to create a TOKEN so that the agent can access the APIs.
 This is done by creating System Accounts:
 
-1. Navigate to Organization on the right hand side
+1. Navigate to Organization on the left hand side
 2. Click System Accounts -> Create one
 3. Click Manage Tokens on the top right
 4. Create a new token and copy the token
@@ -136,7 +136,7 @@ linked to it.
 </p>
 
 ### Kong config
-First navigate to settings of the repository and create a Action Secret called `KONNECT_TOKEN` and use
+First navigate to settings of the new repository you created in previous steps and create a Action Secret called `KONNECT_TOKEN` and use
 the Konnect token generated above.
 
 Next is to set up the Kong config. There is a template for the repo in this project under the `kong-config-template` folder.
@@ -217,7 +217,6 @@ kubectl create secret generic mcp-konnect-secret \
   -n ai
   
 kubectl create secret generic mcp-slack-secret \
-  --from-literal=SLACK_BOT_TOKEN='<slack-bot-token>' \
   --from-literal=SLACK_TEAM_ID='<team-id>' \
   --from-literal=SLACK_CHANNEL_IDS='<channel-ids>' \
   --from-literal=SLACK_MCP_XOXP_TOKEN='<xoxp-token>' \
