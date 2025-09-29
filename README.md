@@ -45,7 +45,23 @@ You then also want to create a new repository to house the Kong config in, make 
 ### Slack
 Slack is being used as a means of alerting when something happens. In order for this to work you
 will need a slack workspace and the admin access to create Slack Apps. Follow the following steps
-to create the token and get the slack team id: https://apidog.com/blog/slack-mcp-server/
+to create a User token and get the slack team id:
+
+1. Navigate to Slack workspace in your browser
+2. Click Admin Tools on left panel > Apps and workflows
+3. Click Build (top right)
+4. Click Create New App
+5. Click From Scratch - Give it a App Name and Pick your workspace
+6. Click OAuth and permissions in left menu
+7. Under scopes, create User Token Scopes with the following scopes
+   1. **channels:history** - Allows viewing messages and content in public channels
+   2. **channels:read** - Enables access to basic information about channels
+   3. **chat:write** - Grants permission to send messages as the application
+   4. **reactions:write** - Permits adding emoji reactions to messages
+   5. **users:read** - Allows viewing basic information about workspace users
+   6. **users:read.email** - (Optional) Enables access to user email addresses
+8. Up the top of the page click "Install to <name of workspace>"
+9. Copy the User OAuth Token starting with `xoxp-`
 
 You will also need a Slack channel to send alerts to, but the tool needs the channel id not name
 which can be obtained via the UI, click on the channel name to open its settings and navigate to the
@@ -55,7 +71,14 @@ bottom of the window
     <img src="assets/slack-channel-id.png">
 </p>
 
-Once all configured and the new Slack App invited to your channel you will share these details in the chart below.
+Finally, you need the Team Id, again nagivate to your Slack workspace in the browser and look at the URL, the
+parameter starting with a `T` is your team ID.
+
+```commandline
+https://app.slack.com/client/T00000
+```
+
+Once all configured you will share these details in the chart below.
 
 ### Konnect
 The last service you need an account with is Kong Konnect. You can register for a free account here: https://cloud.konghq.com/
@@ -229,7 +252,6 @@ kubectl create secret generic mcp-konnect-secret \
 ```
 ```bash
 kubectl create secret generic mcp-slack-secret \
---from-literal=SLACK_BOT_TOKEN='xoxb-xxx' \
 --from-literal=SLACK_TEAM_ID='T000000' \
 --from-literal=SLACK_CHANNEL_IDS='C0000000' \
 --from-literal=SLACK_MCP_XOXP_TOKEN='xoxp-xxxxx' \
@@ -309,3 +331,10 @@ You will eventually get the following message in slack
 Click in the PR, check the change, merge it and your traffic will start to work again. 
 
 BOSH! Your configuration has been rolled back by the Kong Agentic AI Agent
+
+## Current Limitations
+One limitation I have noticed while testing was the Claude token limits. What I found was I kept getting
+rate limited when my AI Agent made calls to the LLM. This seemed to fix itself I think when some of the calls
+could be cached as the data was not changing.
+
+A possible solution is to get the limits increased or use another LLM like AWS Bedrock,
