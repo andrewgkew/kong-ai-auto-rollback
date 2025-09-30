@@ -6,9 +6,9 @@ plugins:
 services:
   - name: echo-service
     path: /anything
-    host: httpbin.org
-    port: 443
-    protocol: https
+    host: echo
+    port: 1027
+    protocol: http
     routes:
       - name: echo-route
         methods:

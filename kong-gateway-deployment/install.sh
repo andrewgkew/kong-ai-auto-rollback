@@ -43,3 +43,5 @@ helm install kong kong/kong -n ${NAMESPACE} --skip-crds --values ./values.yaml \
     --set env.cluster_server_name=${CONTROL_PLANE_ENDPOINT} \
     --set env.cluster_telemetry_endpoint=${CONTROL_PLANE_TELEMETRY}:443 \
     --set env.cluster_telemetry_server_name=${CONTROL_PLANE_TELEMETRY}
+
+kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n ${NAMESPACE}

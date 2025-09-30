@@ -197,39 +197,20 @@ You should see a response as follows
 ```bash
  ~ % http :8000/echo
 HTTP/1.1 200 OK
-Access-Control-Allow-Credentials: true
-Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 564
-Content-Type: application/json
-Date: Mon, 29 Sep 2025 09:38:13 GMT
-Server: gunicorn/19.9.0
+Content-Length: 143
+Content-Type: text/plain; charset=utf-8
+Date: Tue, 30 Sep 2025 08:53:41 GMT
+Server: kong/3.11.0.3-enterprise-edition
 Via: 1.1 kong/3.11.0.3-enterprise-edition
-X-Kong-Proxy-Latency: 2
-X-Kong-Request-Id: f76cab7ede17df15bb0621035e5e1a58
-X-Kong-Upstream-Latency: 1049
+X-Kong-Proxy-Latency: 132
+X-Kong-Request-Id: e36b4638896c1930325bee07c62ee227
+X-Kong-Upstream-Latency: 2
 
-{
-    "args": {},
-    "data": "",
-    "files": {},
-    "form": {},
-    "headers": {
-        "Accept": "*/*",
-        "Accept-Encoding": "gzip, deflate",
-        "Host": "httpbin.org",
-        "User-Agent": "HTTPie/3.2.4",
-        "X-Amzn-Trace-Id": "Root=1-68da5385-58b541b139da69776374badd",
-        "X-Forwarded-Host": "localhost",
-        "X-Forwarded-Path": "/echo",
-        "X-Forwarded-Prefix": "/echo",
-        "X-Kong-Request-Id": "f76cab7ede17df15bb0621035e5e1a58"
-    },
-    "json": null,
-    "method": "GET",
-    "origin": "127.0.0.1, 81.150.180.48",
-    "url": "https://localhost/anything"
-}
+Welcome, you are connected to node kind-control-plane.
+Running on Pod echo-6f4786c4b4-wdz9j.
+In namespace kong.
+With IP address 10.244.0.111.
 ```
 
 ### AI Agent
