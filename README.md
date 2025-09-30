@@ -348,3 +348,10 @@ You will eventually get the following message in slack
 Click in the PR, check the change, merge it and your traffic will start to work again. 
 
 BOSH! Your configuration has been rolled back by the Kong Agentic AI Agent
+
+## Supporting Links
+1. Kong Konnect: https://cloud.konghq.com/
+2. HolmesGPT: https://holmesgpt.dev/
+3. Kong Konnect MCP: https://github.com/Kong/mcp-konnect
+4. Kong Konnect MCP Docker image: https://hub.docker.com/r/thegatewayguy/superbase-konnect-mcp
+5. AWS Bedrock: https://aws.amazon.com/bedrock/
